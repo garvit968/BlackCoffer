@@ -1,6 +1,7 @@
 import os
 import string
 import nltk
+import openpyxl
 import syllapy
 import re
 
@@ -111,11 +112,34 @@ def metrics_calculation(text):
     
 
 def process_articles():
-    article_dir = '../Scrapping/articles'
-    for file in os.listdir(article_dir):
-        file_path=os.path.join(article_dir,file)
-        with open(file_path, 'r', encoding='ISO-8859-1') as f:
-            text = f.read()
-            print(metrics_calculation(text))
+    try:
+        article_dir = '../Scrapping/articles'
+        wb = openpyxl.load_workbook('../Output_Data.xlsx')
+        sheet = wb.active
+        row = 2
+        for file in os.listdir(article_dir):
+            file_path=os.path.join(article_dir,file)
+            with open(file_path, 'r', encoding='ISO-8859-1') as f:
+                text = f.read()
+                ans = metrics_calculation(text)
+                sheet.cell(row=row, column=3, value=ans["POSITIVE SCORE"])
+                sheet.cell(row=row, column=4, value=ans["NEGATIVE SCORE"])
+                sheet.cell(row=row, column=5, value=ans["POLARITY SCORE"])
+                sheet.cell(row=row, column=6, value=ans["SUBJECTIVE SCORE"])
+                sheet.cell(row=row, column=7, value=ans["AVG SENTENCE LENGTH"])
+                sheet.cell(row=row, column=8, value=ans["PERCENTAGE COMPLEX WORDS"])
+                sheet.cell(row=row, column=9, value=ans["FOG INDEX"])
+                sheet.cell(row=row, column=10, value=ans["AVG WORDS PER SENTENCE"])
+                sheet.cell(row=row, column=11, value=ans["COMPLEX WORD COUNT"])
+                sheet.cell(row=row, column=12, value=ans["FILTERED WORD COUNT"])
+                sheet.cell(row=row, column=13, value=ans["SYLLABLE PER WORD"])
+                sheet.cell(row=row, column=14, value=ans["PERSONAL PRONOUNS"])
+                sheet.cell(row=row, column=15, value=ans["AVG WORD LENGTH"])
+                print(f'Created Sheet at row {row}')
 
+                row+=1
+
+        wb.save('../Output_Data_updated.xlsx')
+    except Exception as e:
+        print(Exception)
 process_articles()
