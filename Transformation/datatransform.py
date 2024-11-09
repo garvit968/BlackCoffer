@@ -5,33 +5,48 @@ import openpyxl
 import syllapy
 import re
 
-
+# Calculation of StopWords
 def stop_words():
+    # Set to store all StopWords
     stop_words_all = set()
-    for filename in os.listdir('./StopWords'):
-        file_path = os.path.join('./StopWords', filename)
-        with open(file_path, 'r', encoding='ISO-8859-1') as file:
-            for line in file:
-                stopword = line.strip().lower()
-                stop_words_all.add(stopword)
-    return sorted(stop_words_all)
+    try:
+        for filename in os.listdir('./StopWords'):
+            file_path = os.path.join('./StopWords', filename)
+            with open(file_path, 'r', encoding='ISO-8859-1') as file:
+                for line in file:
+                    stopword = line.strip().lower()
+                    stop_words_all.add(stopword)
+        return sorted(stop_words_all)
+    except Exception as e:
+        print(e)
 
+# Calculation of Positive Words
 def positive_words():
-    positive_all = set()
-    with open('./MasterDictionary/positive-words.txt', 'r', encoding='ISO-8859-1') as file:
-        for line in file:
-            word = line.strip().lower()
-            positive_all.add(word)
-    return sorted(positive_all)
+    # Set to store all Positive Words
+    try:
+        positive_all = set()
+        with open('./MasterDictionary/positive-words.txt', 'r', encoding='ISO-8859-1') as file:
+            for line in file:
+                word = line.strip().lower()
+                positive_all.add(word)
+        return sorted(positive_all)
+    except Exception as e:
+        print(e)
 
+# Calculation of Negative Words
 def negative_words():
-    negative_all = set()
-    with open('./MasterDictionary/negative-words.txt', 'r', encoding='ISO-8859-1') as file:
-        for line in file:
-            word = line.strip().lower()
-            negative_all.add(word)
-    return sorted(negative_all)
+    # Set to store all Negative Words
+    try:
+        negative_all = set()
+        with open('./MasterDictionary/negative-words.txt', 'r', encoding='ISO-8859-1') as file:
+            for line in file:
+                word = line.strip().lower()
+                negative_all.add(word)
+        return sorted(negative_all)
+    except Exception as e:
+        print(e)
 
+# Calculation of required metrices
 def metrics_calculation(text):
     stopwords = stop_words()
     # print(len(stopwords))
@@ -111,6 +126,7 @@ def metrics_calculation(text):
     }
     
 
+# Function to fetch and send for Calculation of Metrics
 def process_articles():
     try:
         article_dir = '../Scrapping/articles'
@@ -142,4 +158,10 @@ def process_articles():
         wb.save('../Output_Data_updated.xlsx')
     except Exception as e:
         print(Exception)
-process_articles()
+
+# Main Function
+def main():
+    process_articles()
+
+if __name__ == "__main__":
+    main()
